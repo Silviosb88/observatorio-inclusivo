@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>RA 1 – Grande São Paulo</title>
+  <style>
+    table {border-collapse: collapse; width:100%;}
+    th, td {border:1px solid #ccc; padding:8px; text-align:left;}
+    th {background:#f4f4f4;}
+    a {color:#0066cc;}
+  </style>
+</head>
+<body>
+  <h1>Região Administrativa 1 – Grande São Paulo</h1>
+  <table id="muni-gpsp">
+    <thead>
+      <tr>
+        <th>Código IBGE</th>
+        <th>Município</th>
+        <th>Site da Prefeitura</th>
+        <th>Status – Conselho</th>
+        <th>DRADS</th>
+        <th>CNEAS</th>
+        <th>Centro Paula Souza</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Linhas serão inseridas por script -->
+    </tbody>
+  </table>
+
+  <!-- 1) Inclua PapaParse via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      Papa.parse("grande_sp.csv", {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        complete: results => {
+          const data = results.data;
+          const tbody = document.querySelector("#muni-gpsp tbody");
+          data.forEach(row => {
+            const tr = document.createElement("tr");
+
+            // 1. Código IBGE
+            const tdCod = document.createElement("td");
+            tdCod.textContent = row["Código IBGE"];
+            tr.appendChild(tdCod);
+
+            // 2. Município
+            const tdMun = document.createElement("td");
+            tdMun.textContent = row["Município"];
+            tr.appendChild(tdMun);
+
+            // 3. Site da Prefeitura
+            const tdPref = document.createElement("td");
+            const linkPref = document.createElement("a");
+            linkPref.href = row["Site da Prefeitura"];
+            linkPref.target = "_blank";
+            linkPref.textContent = "Prefeitura de " + row["Município"];
+            tdPref.appendChild(linkPref);
+            tr.appendChild(tdPref);
+
+            // 4. Status – Conselho
+            const tdStat = document.createElement("td");
+            tdStat.textContent = row["Status - Conselho (A=Ativo /I=Inativo/D=Desativado/N=Não existe)"];
+            tr.appendChild(tdStat);
+
+            // 5. DRADS
+            const tdDrads = document.createElement("td");
+            tdDrads.textContent = row["DRADS"];
+            tr.appendChild(tdDrads);
+
+            // 6. CNEAS
+            const tdCneas = document.createElement("td");
+            const linkCneas = document.createElement("a");
+            linkCneas.href = row["CNEAS – Consulta Pública"];
+            linkCneas.target = "_blank";
+            linkCneas.textContent = "CNEAS";
+            tdCneas.appendChild(linkCneas);
+            tr.appendChild(tdCneas);
+
+            // 7. Centro Paula Souza
+            const tdCps = document.createElement("td");
+            const linkCps = document.createElement("a");
+            linkCps.href = row["Centro Paula Souza"];
+            linkCps.target = "_blank";
+            linkCps.textContent = "Centro Paula Souza";
+            tdCps.appendChild(linkCps);
+            tr.appendChild(tdCps);
+
+            tbody.appendChild(tr);
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
